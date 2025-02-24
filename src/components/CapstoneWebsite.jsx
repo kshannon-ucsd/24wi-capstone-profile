@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Linkedin, Github, ExternalLink, Menu, X, Code2  } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Mail, Linkedin, Github, ExternalLink, Menu, X, Code2 } from 'lucide-react';
 
 const Navigation = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +13,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
               Sepsis Detection
             </h1>
           </div>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
@@ -21,11 +21,10 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    activeTab === tab
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${activeTab === tab
                       ? 'bg-blue-500 text-white'
                       : 'text-gray-700 hover:bg-blue-100'
-                  }`}
+                    }`}
                 >
                   {tab}
                 </button>
@@ -55,11 +54,10 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                     setActiveTab(tab);
                     setIsMenuOpen(false);
                   }}
-                  className={`block w-full px-3 py-2 rounded-md text-base font-medium ${
-                    activeTab === tab
+                  className={`block w-full px-3 py-2 rounded-md text-base font-medium ${activeTab === tab
                       ? 'bg-blue-500 text-white'
                       : 'text-gray-700 hover:bg-blue-100'
-                  }`}
+                    }`}
                 >
                   {tab}
                 </button>
@@ -72,6 +70,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
   );
 };
 
+
 const ProjectSection = () => {
   const projects = [
     {
@@ -80,11 +79,11 @@ const ProjectSection = () => {
       image: "./assets/sepsis.png",
     },
     {
-      title: "Two-Pronged AI Approach", 
+      title: "Two-Pronged AI Approach",
       description: "Our novel solution utilizes a two-part AI pipeline: 1) A ResNet model detects lung anomalies from chest X-rays. 2) A neural network combines the X-ray findings with patient vitals to predict sepsis onset likelihood within 1, 2, or 3+ days.",
       image: "./assets/pipeline.png",
     },
-    {  
+    {
       title: "Comprehensive Clinical Datasets",
       description: "We leverage the MIMIC-IV and MIMIC-CXR datasets containing rich patient data including demographics, vital signs, lab results, medications, and over 377,000 chest X-rays. Extensive data engineering was done to preprocess and integrate the data.",
       image: "./assets/mimic-cxr.png",
@@ -92,7 +91,7 @@ const ProjectSection = () => {
     {
       title: "Detecting Lung Anomalies with ResNet",
       description: "The first AI component is a ResNet (residual network) model trained on annotated MIMIC chest X-rays to identify lung abnormalities that may indicate sepsis risk. ResNet's deep learning architecture excels at medical image analysis.",
-      image: "./assets/model.png", 
+      image: "./assets/model.png",
     },
     {
       title: "Predicting Sepsis Onset with Vitals",
@@ -101,7 +100,7 @@ const ProjectSection = () => {
     },
     {
       title: "Scalable Cloud Deployment",
-      description: "To ensure scalability and accessibility, the system is deployed on AWS cloud infrastructure. S3 stores X-ray data, ECS hosts containerized models, and CloudFront enables fast content delivery. This allows seamless usage by healthcare providers.", 
+      description: "To ensure scalability and accessibility, the system is deployed on AWS cloud infrastructure. S3 stores X-ray data, ECS hosts containerized models, and CloudFront enables fast content delivery. This allows seamless usage by healthcare providers.",
       image: "./assets/container.png",
     },
     {
@@ -111,35 +110,88 @@ const ProjectSection = () => {
     }
   ];
 
+  const ProjectCard = ({ project, index }) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const cardRef = useRef(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsVisible(entry.isIntersecting);
+        },
+        {
+          threshold: 0.2,
+          rootMargin: '-50px',
+        }
+      );
+
+      if (cardRef.current) {
+        observer.observe(cardRef.current);
+      }
+
+      return () => {
+        if (cardRef.current) {
+          observer.unobserve(cardRef.current);
+        }
+      };
+    }, []);
+
+    return (
+      <div
+        ref={cardRef}
+        className={`flex flex-col md:flex-row items-center gap-8 py-16 scroll-mt-20 transition-all duration-1000 ${
+          isVisible
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className={`flex-1 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
+          <img
+            src={project.image}
+            alt={project.title}
+            className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
+          />
+        </div>
+        <div
+          className={`flex-1 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} 
+            relative p-6 rounded-xl ${isVisible ? 'animate-frame-appear' : ''}`}
+        >
+          <div 
+            className={`relative z-10 p-6 rounded-xl bg-white/50 backdrop-blur-sm
+              transition-all duration-700 ${
+                isVisible
+                  ? 'opacity-100 shadow-lg'
+                  : 'opacity-0 shadow-none'
+              }`}
+          >
+            <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              {project.title}
+            </h2>
+            <p className="text-gray-600 leading-relaxed">
+              {project.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {projects.map((project, index) => (
-          <div
-            key={index}
-            className="flex flex-col md:flex-row items-center gap-8 py-16 scroll-mt-20"
-          >
-            <div className={`flex-1 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
-              <img
-                src={project.image}
-                alt={project.title}
-                className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
-              />
-            </div>
-            <div className={`flex-1 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
-              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {project.title}
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                {project.description}
-              </p>
-            </div>
-          </div>
+          <ProjectCard key={index} project={project} index={index} />
         ))}
       </div>
+      <footer className="bg-pink-20 py-4 mt-8">
+        <div className="container mx-auto text-center text-gray-600">
+          &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
+        </div>
+      </footer>
     </div>
   );
 };
+
 
 
 
@@ -153,12 +205,12 @@ const TeamMember = ({ name, role, email, image, contributions, isLead, socials }
       />
       <h3 className={`${isLead ? 'text-2xl' : 'text-xl'} font-semibold text-gray-800`}>{name}</h3>
       <p className={`${isLead ? 'text-purple-600' : 'text-blue-600'} mb-2`}>{role}</p>
-      
+
       {/* Social Links */}
       <div className="flex space-x-4 mb-4">
         {socials.website && (
-          <a href={socials.website} target="_blank" rel="noopener noreferrer" 
-             className="text-gray-600 hover:text-blue-500 transition-colors">
+          <a href={socials.website} target="_blank" rel="noopener noreferrer"
+            className="text-gray-600 hover:text-blue-500 transition-colors">
             <ExternalLink className="w-5 h-5" />
           </a>
         )}
@@ -166,14 +218,14 @@ const TeamMember = ({ name, role, email, image, contributions, isLead, socials }
           <Mail className="w-5 h-5" />
         </a>
         {socials.github && (
-          <a href={socials.github} target="_blank" rel="noopener noreferrer" 
-             className="text-gray-600 hover:text-blue-500 transition-colors">
+          <a href={socials.github} target="_blank" rel="noopener noreferrer"
+            className="text-gray-600 hover:text-blue-500 transition-colors">
             <Github className="w-5 h-5" />
           </a>
         )}
         {socials.linkedin && (
-          <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" 
-             className="text-gray-600 hover:text-blue-500 transition-colors">
+          <a href={socials.linkedin} target="_blank" rel="noopener noreferrer"
+            className="text-gray-600 hover:text-blue-500 transition-colors">
             <Linkedin className="w-5 h-5" />
           </a>
         )}
@@ -187,6 +239,11 @@ const TeamMember = ({ name, role, email, image, contributions, isLead, socials }
         ))}
       </div>
     </div>
+    <footer className="bg-pink-20 py-4 mt-8">
+      <div className="container mx-auto text-center text-gray-600">
+        &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
+      </div>
+    </footer>
   </div>
 );
 
@@ -318,7 +375,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen pt-16 bg-gradient-to-b from-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16" style={{ marginTop: '60px' }}>
           <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Meet Our Team
           </h2>
@@ -346,14 +403,14 @@ const AboutUs = () => {
             </a>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers
             .filter(member => member.isLead)
             .map(member => (
               <TeamMember key={member.email} {...member} />
             ))}
-          
+
           {teamMembers
             .filter(member => !member.isLead)
             .map(member => (
@@ -361,6 +418,11 @@ const AboutUs = () => {
             ))}
         </div>
       </div>
+      <footer className="bg-pink-20 py-4 mt-8">
+        <div className="container mx-auto text-center text-gray-600">
+          &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
+        </div>
+      </footer>
     </div>
   );
 };
@@ -382,8 +444,9 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-purple-50">
+      {/* <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"></div> */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white rounded-xl shadow-lg p-8" style={{ marginTop: '60px' }}>
           <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Contact Us
           </h2>
@@ -457,7 +520,13 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
+      <footer className="bg-pink-20 py-4 mt-8">
+        <div className="container mx-auto text-center text-gray-600">
+          &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
+        </div>
+      </footer>
     </div>
+
   );
 };
 
@@ -480,7 +549,7 @@ const App = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       <AnimatedBackground />
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
-      
+
       {activeTab === 'The Project' && <ProjectSection />}
       {activeTab === 'About Us' && <AboutUs />}
       {activeTab === 'Contact Us' && <ContactUs />}
