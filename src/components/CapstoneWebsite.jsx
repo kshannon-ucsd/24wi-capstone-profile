@@ -206,7 +206,7 @@ const AboutUs = () => {
         "Project oversight and guidance",
         "Repository management",
         "Technical direction",
-        "Roadblack resolution"
+        "Roadblock resolution"
       ],
       socials: {
         website: "https://www.kmshannon.com/about/", // Example URL
@@ -236,7 +236,7 @@ const AboutUs = () => {
       name: "Boqi (Bobby) Zhu",
       role: "Cloud Engineer",
       email: "b2zhu@ucsd.edu",
-      image: "./assets/bobby.jpeg",
+      image: "./assets/bobby.png",
       contributions: [
         "AWS Organization setup",
         "Cloud architecture research",
@@ -247,38 +247,6 @@ const AboutUs = () => {
         website: "https://bobbyzhu.com/",
         github: "https://github.com/Bobby-Zhu",
         linkedin: "https://www.linkedin.com/in/bobby-zhu/"
-      }
-    },
-    {
-      name: "Tongxun (Sherry) Hu",
-      role: "Data Scientist",
-      email: "t9hu@ucsd.edu",
-      image: "./assets/sherry.jpeg",
-      contributions: [
-        "GitHub repository setup",
-        "ML model development",
-        "KNN and CNN implementation",
-        "Code structure design"
-      ],
-      socials: {
-        github: "https://github.com/sherrihuu",
-        linkedin: "https://www.linkedin.com/in/tongxun-hu-ab4b04304/"
-      }
-    },
-    {
-      name: "Raine Hoang",
-      role: "Data Engineer",
-      email: "k7hoang@ucsd.edu",
-      image: "./assets/raine.jpg",
-      contributions: [
-        "Created toy dataset for analytics",
-        "MIMIC-IV documentation",
-        "Feature engineering and LCA analysis",
-        "Exploratory Data Analysis"
-      ],
-      socials: {
-        github: "https://github.com/Jystine",
-        linkedin: "https://www.linkedin.com/in/raine-hoang/"
       }
     },
     {
@@ -298,6 +266,22 @@ const AboutUs = () => {
       }
     },
     {
+      name: "Raine Hoang",
+      role: "Data Engineer",
+      email: "k7hoang@ucsd.edu",
+      image: "./assets/raine.jpg",
+      contributions: [
+        "Created toy dataset for analytics",
+        "MIMIC-IV documentation",
+        "Feature engineering and LCA analysis",
+        "Exploratory Data Analysis"
+      ],
+      socials: {
+        github: "https://github.com/Jystine",
+        linkedin: "https://www.linkedin.com/in/raine-hoang/"
+      }
+    },
+    {
       name: "Rohan Duvur",
       role: "ML Engineer",
       email: "rduvur@ucsd.edu",
@@ -311,6 +295,22 @@ const AboutUs = () => {
       socials: {
         github: "https://github.com/rduvur",
         linkedin: "https://www.linkedin.com/in/rohan-duvur-a95313195/"
+      }
+    },
+    {
+      name: "Tongxun (Sherry) Hu",
+      role: "Data Scientist",
+      email: "t9hu@ucsd.edu",
+      image: "./assets/sherry.jpeg",
+      contributions: [
+        "GitHub repository setup",
+        "ML model development",
+        "KNN and CNN implementation",
+        "Code structure design"
+      ],
+      socials: {
+        github: "https://github.com/sherrihuu",
+        linkedin: "https://www.linkedin.com/in/tongxun-hu-ab4b04304/"
       }
     }
   ];
