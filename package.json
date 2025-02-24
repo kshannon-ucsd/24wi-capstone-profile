@@ -1,5 +1,6 @@
 {
-  "name": "my-capstone-app",
+  "name": "capstone-profile",
+  "homepage": "https://github.com/kshannon-ucsd/24wi-capstone-profile",
   "private": true,
   "version": "0.0.0",
   "type": "module",
