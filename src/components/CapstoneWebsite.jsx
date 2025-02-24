@@ -239,11 +239,6 @@ const TeamMember = ({ name, role, email, image, contributions, isLead, socials }
         ))}
       </div>
     </div>
-    <footer className="bg-pink-20 py-4 mt-8">
-      <div className="container mx-auto text-center text-gray-600">
-        &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
-      </div>
-    </footer>
   </div>
 );
 
