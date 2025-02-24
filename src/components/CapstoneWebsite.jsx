@@ -77,37 +77,37 @@ const ProjectSection = () => {
     {
       title: "The Sepsis Challenge",
       description: "Sepsis is a life-threatening condition caused by extreme response to infection. Early detection is crucial but challenging for clinicians. Our project aims to assist healthcare providers with a radiographic enhanced AI system.",
-      image: "public/assets/sepsis.png",
+      image: "./assets/sepsis.png",
     },
     {
       title: "Two-Pronged AI Approach", 
       description: "Our novel solution utilizes a two-part AI pipeline: 1) A ResNet model detects lung anomalies from chest X-rays. 2) A neural network combines the X-ray findings with patient vitals to predict sepsis onset likelihood within 1, 2, or 3+ days.",
-      image: "public/assets/pipeline.png",
+      image: "./assets/pipeline.png",
     },
     {  
       title: "Comprehensive Clinical Datasets",
       description: "We leverage the MIMIC-IV and MIMIC-CXR datasets containing rich patient data including demographics, vital signs, lab results, medications, and over 377,000 chest X-rays. Extensive data engineering was done to preprocess and integrate the data.",
-      image: "public/assets/mimic-cxr.png",
+      image: "./assets/mimic-cxr.png",
     },
     {
       title: "Detecting Lung Anomalies with ResNet",
       description: "The first AI component is a ResNet (residual network) model trained on annotated MIMIC chest X-rays to identify lung abnormalities that may indicate sepsis risk. ResNet's deep learning architecture excels at medical image analysis.",
-      image: "public/assets/model.png", 
+      image: "./assets/model.png", 
     },
     {
       title: "Predicting Sepsis Onset with Vitals",
       description: "The second AI component is a neural network that ingests the lung anomaly findings from ResNet, along with key patient vitals and demographic data, to output sepsis onset predictions at 1, 2 and 3+ day horizons - enabling proactive care.",
-      image: "public/assets/second-model.png",
+      image: "./assets/second-model.png",
     },
     {
       title: "Scalable Cloud Deployment",
       description: "To ensure scalability and accessibility, the system is deployed on AWS cloud infrastructure. S3 stores X-ray data, ECS hosts containerized models, and CloudFront enables fast content delivery. This allows seamless usage by healthcare providers.", 
-      image: "public/assets/container.png",
+      image: "./assets/container.png",
     },
     {
       title: "Potential for Clinical Impact",
       description: "This advanced AI clinical decision support system could help clinicians identify sepsis risk earlier, enabling timely intervention and personalized care - ultimately improving patient outcomes and reducing healthcare burden of sepsis.",
-      image: "public/assets/final.png",
+      image: "./assets/final.png",
     }
   ];
 
@@ -200,7 +200,7 @@ const AboutUs = () => {
       name: "Kyle Shannon",
       role: "Mentor",
       email: "kshannon@ucsd.edu",
-      image: "public/assets/kyle.png",
+      image: "./assets/kyle.png",
       isLead: true,
       contributions: [
         "Project oversight and guidance",
@@ -218,7 +218,7 @@ const AboutUs = () => {
       name: "Ahmed Mostafa",
       role: "Project Manager",
       email: "ahmostafa@ucsd.edu",
-      image: "public/assets/ahmed.jpeg",
+      image: "./assets/ahmed.jpeg",
       contributions: [
         "Designed project structure",
         "Maintained GitHub repositories",
@@ -236,7 +236,7 @@ const AboutUs = () => {
       name: "Boqi (Bobby) Zhu",
       role: "Cloud Engineer",
       email: "b2zhu@ucsd.edu",
-      image: "public/assets/bobby.jpeg",
+      image: "./assets/bobby.jpeg",
       contributions: [
         "AWS Organization setup",
         "Cloud architecture research",
@@ -253,7 +253,7 @@ const AboutUs = () => {
       name: "Tongxun (Sherry) Hu",
       role: "Data Scientist",
       email: "t9hu@ucsd.edu",
-      image: "public/assets/sherry.jpeg",
+      image: "./assets/sherry.jpeg",
       contributions: [
         "GitHub repository setup",
         "ML model development",
@@ -269,7 +269,7 @@ const AboutUs = () => {
       name: "Raine Hoang",
       role: "Data Engineer",
       email: "k7hoang@ucsd.edu",
-      image: "public/assets/raine.jpg",
+      image: "./assets/raine.jpg",
       contributions: [
         "Created toy dataset for analytics",
         "MIMIC-IV documentation",
@@ -285,7 +285,7 @@ const AboutUs = () => {
       name: "Ojas Vashishtha",
       role: "ML Engineer",
       email: "ovashishtha@ucsd.edu",
-      image: "public/assets/ojas.jpeg",
+      image: "./assets/ojas.jpeg",
       contributions: [
         "Database setup and research",
         "Segmentation evaluation",
@@ -301,7 +301,7 @@ const AboutUs = () => {
       name: "Rohan Duvur",
       role: "ML Engineer",
       email: "rduvur@ucsd.edu",
-      image: "public/assets/rohan.jpg",
+      image: "./assets/rohan.jpg",
       contributions: [
         "Selenium image scraping",
         "ML deployment strategies",
