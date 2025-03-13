@@ -123,7 +123,7 @@ const ProjectCard = ({ project, index, darkMode }) => {
   const [modalImage, setModalImage] = useState('');
 
   // Smart Clinical Integration special case
-  const isModelImage = project.title === "Smart Clinical Integration";
+  const isModelImage = project.title === "Interactive Decision Support Tool";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
