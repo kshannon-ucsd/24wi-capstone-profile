@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mail, Presentation, FileText, Linkedin, Github, ExternalLink, Menu, X, Code2 } from 'lucide-react';
+import { Mail, Presentation, FileText, Linkedin, Github, ExternalLink, Menu, X, Code2, Moon, Sun } from 'lucide-react';
 
-const Navigation = ({ activeTab, setActiveTab }) => {
+const Navigation = ({ activeTab, setActiveTab, darkMode, toggleDarkMode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-lg">
+    <nav className={`fixed top-0 left-0 right-0 ${darkMode ? 'bg-gray-900/90' : 'bg-white/80'} backdrop-blur-md z-50 shadow-lg transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold animated-gradient-text">
               Sepsis Detection
             </h1>
           </div>
@@ -22,21 +22,37 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${activeTab === tab
-                      ? 'bg-blue-500 text-white'
+                    ? 'bg-blue-500 text-white'
+                    : darkMode
+                      ? 'text-gray-300 hover:bg-blue-900/50'
                       : 'text-gray-700 hover:bg-blue-100'
                     }`}
                 >
                   {tab}
                 </button>
               ))}
+              <button
+                onClick={toggleDarkMode}
+                className={`p-2 rounded-full ${darkMode ? 'bg-gray-800 text-yellow-300' : 'bg-gray-200 text-gray-700'} transition-colors`}
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleDarkMode}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-800 text-yellow-300' : 'bg-gray-200 text-gray-700'} transition-colors`}
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md text-gray-700 hover:bg-blue-100"
+              className={`p-2 rounded-md ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-blue-100'}`}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -55,7 +71,9 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                     setIsMenuOpen(false);
                   }}
                   className={`block w-full px-3 py-2 rounded-md text-base font-medium ${activeTab === tab
-                      ? 'bg-blue-500 text-white'
+                    ? 'bg-blue-500 text-white'
+                    : darkMode
+                      ? 'text-gray-300 hover:bg-gray-800'
                       : 'text-gray-700 hover:bg-blue-100'
                     }`}
                 >
@@ -71,42 +89,42 @@ const Navigation = ({ activeTab, setActiveTab }) => {
 };
 
 // Image Modal component for viewing expanded images
-const ImageModal = ({ image, alt, onClose }) => {
+const ImageModal = ({ image, alt, onClose, darkMode }) => {
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100]" onClick={onClose}>
       <div className="max-w-5xl max-h-screen p-4 relative">
-        <button 
+        <button
           className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 rounded-full p-2 transition-all duration-300"
           onClick={onClose}
         >
           <X size={24} className="text-white" />
         </button>
-        <img 
-          src={image} 
-          alt={alt} 
+        <img
+          src={image}
+          alt={alt}
           className="max-w-full max-h-[calc(100vh-100px)] object-contain"
-          onClick={(e) => e.stopPropagation()} 
+          onClick={(e) => e.stopPropagation()}
         />
       </div>
     </div>
   );
 };
 
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index, darkMode }) => {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef(null);
-  
+
   // For slideshow functionality
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideImages = project.images || [project.image]; // Use array of images if provided, otherwise use single image
-  
+
   // For image modal
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState('');
-  
+
   // Smart Clinical Integration special case
   const isModelImage = project.title === "Smart Clinical Integration";
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -128,7 +146,7 @@ const ProjectCard = ({ project, index }) => {
       }
     };
   }, []);
-  
+
   // Auto-slide functionality
   useEffect(() => {
     // Only setup auto-slide for cards that have multiple images
@@ -136,56 +154,55 @@ const ProjectCard = ({ project, index }) => {
       const interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % slideImages.length);
       }, 5000);
-      
+
       return () => clearInterval(interval);
     }
   }, [slideImages.length]);
-  
+
   // Manual slide navigation
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
-  
+
   const goToNextSlide = (e) => {
     e.stopPropagation();
     setCurrentSlide((prev) => (prev + 1) % slideImages.length);
   };
-  
+
   const goToPrevSlide = (e) => {
     e.stopPropagation();
     setCurrentSlide((prev) => (prev - 1 + slideImages.length) % slideImages.length);
   };
-  
+
   // Open modal with current slide image
   const openModal = (e) => {
-    if (project.title === "Projected System") {
+    if (project.title === "Robust Technical Architecture") {
       e.stopPropagation();
       setModalImage(slideImages[currentSlide]);
       setModalOpen(true);
     }
   };
-  
+
   return (
     <div
       ref={cardRef}
-      className={`flex flex-col md:flex-row items-center gap-8 py-12 scroll-mt-20 transition-all duration-1000 ${
-        isVisible
+      className={`flex flex-col md:flex-row items-center gap-8 py-12 scroll-mt-20 transition-all duration-1000 ${isVisible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-10'
-      }`}
+        }`}
     >
       <div className={`flex-1 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'} relative`}>
         {isModelImage ? (
           // For the Smart Clinical Integration card - direct link to demo
-          <a 
-            href="https://kshannon-ucsd.github.io/24wi-dsc180-profile/" 
-            target="_blank" 
+          <a
+            href="https://kshannon-ucsd.github.io/24wi-dsc180-profile/"
+            target="_blank"
             rel="noopener noreferrer"
             className="cursor-pointer block relative"
             style={{ height: "400px", width: "100%" }}
           >
             <div
-              className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full h-full flex items-center justify-center bg-gray-100"
+              className={`rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full h-full flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}
             >
               <img
                 src={project.image}
@@ -193,24 +210,23 @@ const ProjectCard = ({ project, index }) => {
                 className="max-h-full max-w-full object-contain rounded-lg"
               />
             </div>
-            <p className="text-xs text-gray-600 mt-1 bg-white/70 rounded py-1 text-center absolute bottom-0 left-0 right-0">
+            <p className={`text-xs mt-1 ${darkMode ? 'bg-gray-800/70 text-gray-300' : 'bg-white/70 text-gray-600'} rounded py-1 text-center absolute bottom-0 left-0 right-0`}>
               Click to navigate to demo
             </p>
           </a>
-        ) : project.title === "Projected System" ? (
+        ) : project.title === "Robust Technical Architecture" ? (
           // Slideshow specifically for the Projected System card
           <div className="relative">
-            <div 
-              className="rounded-lg shadow-xl overflow-hidden cursor-pointer" 
+            <div
+              className="rounded-lg shadow-xl overflow-hidden cursor-pointer"
               style={{ height: "400px", width: "100%" }}
               onClick={openModal}
             >
               {slideImages.map((image, i) => (
                 <div
                   key={i}
-                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out flex items-center justify-center bg-gray-100 ${
-                    i === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                  }`}
+                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} ${i === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
                   style={{ display: 'block' }}
                 >
                   <img
@@ -221,7 +237,7 @@ const ProjectCard = ({ project, index }) => {
                 </div>
               ))}
             </div>
-            
+
             {/* Enhanced navigation dots with better visibility */}
             <div className="absolute left-0 right-0 bottom-4 flex justify-center gap-3 z-20">
               {slideImages.map((_, i) => (
@@ -231,14 +247,13 @@ const ProjectCard = ({ project, index }) => {
                     e.stopPropagation();
                     goToSlide(i);
                   }}
-                  className={`h-3 rounded-full transition-all duration-300 ${
-                    i === currentSlide ? 'bg-blue-600 w-6' : 'bg-white/70 w-3 hover:bg-white'
-                  }`}
+                  className={`h-3 rounded-full transition-all duration-300 ${i === currentSlide ? 'bg-blue-600 w-6' : 'bg-white/70 w-3 hover:bg-white'
+                    }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
               ))}
             </div>
-            
+
             {/* Improved Previous/Next buttons with transition effects */}
             <button
               onClick={goToPrevSlide}
@@ -254,8 +269,8 @@ const ProjectCard = ({ project, index }) => {
             >
               &#10095;
             </button>
-            
-            
+
+
           </div>
         ) : (
           // For all other single image cards
@@ -268,7 +283,7 @@ const ProjectCard = ({ project, index }) => {
             }}
           >
             <div
-              className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full h-full flex items-center justify-center bg-gray-100"
+              className={`rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 w-full h-full flex items-center justify-center ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}
             >
               <img
                 src={project.image}
@@ -276,17 +291,18 @@ const ProjectCard = ({ project, index }) => {
                 className="max-h-full max-w-full object-contain rounded-lg"
               />
             </div>
-            
-            
+
+
           </div>
         )}
-        
+
         {/* Image Modal */}
         {modalOpen && (
-          <ImageModal 
-            image={modalImage} 
-            alt={project.title} 
-            onClose={() => setModalOpen(false)} 
+          <ImageModal
+            image={modalImage}
+            alt={project.title}
+            onClose={() => setModalOpen(false)}
+            darkMode={darkMode}
           />
         )}
       </div>
@@ -294,18 +310,20 @@ const ProjectCard = ({ project, index }) => {
         className={`flex-1 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'} 
           relative p-6 rounded-xl ${isVisible ? 'animate-frame-appear' : ''}`}
       >
-        <div 
-          className={`relative z-10 p-6 rounded-xl bg-white/50 backdrop-blur-sm
-            transition-all duration-700 ${
-              isVisible
-                ? 'opacity-100 shadow-lg'
-                : 'opacity-0 shadow-none'
+        <div
+          className={`relative z-10 p-6 rounded-xl ${darkMode
+              ? 'bg-gray-800/50 backdrop-blur-sm'
+              : 'bg-white/50 backdrop-blur-sm'
+            }
+            transition-all duration-700 ${isVisible
+              ? 'opacity-100 shadow-lg'
+              : 'opacity-0 shadow-none'
             }`}
         >
-          <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold mb-4 animated-gradient-text">
             {project.title}
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className={`leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             {project.description}
           </p>
         </div>
@@ -314,34 +332,34 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-const ProjectSection = () => {
+const ProjectSection = ({ darkMode }) => {
   // For the slideshow in the "Projected System" card, we need placeholder image URLs
   // Replace these with your actual image paths
-  
+
   const projects = [
     {
-      title: "Fighting Sepsis with AI",
-      description: "Sepsis kills 270,000 Americans annually, with mortality rising 8% every hour diagnosis is delayed. Our AI-powered clinical decision support system helps doctors identify at-risk patients when treatment is most effective, potentially saving thousands of lives.",
+      title: "Early Warning System Saves Lives",
+      description: "Our AI-powered sepsis detection system combines chest X-ray analysis with patient vitals to identify at-risk individuals within only 2-4 hours of admission. By detecting sepsis earlier, when treatment is most effective, our clinical decision support tool helps healthcare providers intervene promptly, potentially saving thousands of lives each year.",
       image: "./assets/sepsis.png",
     },
     {
-      title: "Innovative Two-Stage Approach",
-      description: "Our system first uses ResNet-50 to analyze chest X-rays for pneumonia (90% accuracy), then combines these findings with 13 vital clinical markers in a CatBoost model to predict sepsis risk (AUC 0.86). This dual-model approach offers a comprehensive early warning system for clinicians.",
-      image: "./assets/pipeline.png",
-    },
-    {
-      title: "Powerful Data Foundation",
-      description: "Built on MIMIC datasets from Beth Israel Deaconess Medical Center and Mendeley Data's labeled images, our system analyzes 377,000+ chest X-rays with patient data to detect patterns that clinicians might miss. This diverse training foundation ensures robust real-world performance.",
+      title: "Comprehensive Patient Analysis",
+      description: "Our system integrates multiple data points from patient records, including vital signs, blood markers, and radiographic findings to create a holistic risk profile. The combination of clinical parameters with chest X-ray analysis using our ResNet model enables the detection of subtle patterns that might otherwise be missed in traditional sequential screening methods.",
       image: "./assets/mimic-cxr.png",
     },
     {
-      title: "Smart Clinical Integration",
-      description: "Our system integrates seamlessly with electronic health records via FHIR APIs, presenting actionable insights within existing clinical workflows. The intuitive interface allows healthcare providers to upload X-rays, input lab values, and receive sepsis risk assessments in real-time.",
+      title: "Innovative Two-Stage Approach",
+      description: "Our system employs a two-stage pipeline that first identifies pneumonia through a ResNet-50 neural network analysis of chest X-rays, then feeds these results into a CatBoost model alongside patient metadata to predict sepsis risk. This innovative approach allows us to create an end-to-end solution that combines radiographic image analysis with clinical data for more accurate and earlier sepsis detection.",
+      image: "./assets/pipeline.png",
+    },
+    {
+      title: "Interactive Decision Support Tool",
+      description: "Our user-friendly interface allows medical professionals to upload chest X-rays and input clinical parameters for instant sepsis risk assessment. The system provides a step-by-step analysis, from image validation through pneumonia detection to final risk assessment, all while emphasizing that results should be interpreted alongside other clinical findings by qualified healthcare providers.",
       image: "./assets/model.png",
     },
     {
-      title: "Projected System",
-      description: "As we refine our Sepsis Prediction System, we aim to build a streamlined, AI-driven healthcare platform that enhances diagnostics, security, and accessibility. While currently centered on an AI-powered prediction API, future iterations will introduce a robust microservices backend for seamless Epic integration and an enhanced AI pipeline with continuous learning to improve predictive accuracy. The system will leverage secure, encrypted storage for patient metadata and optimized S3 solutions for medical imaging, ensuring scalability and privacy. Our vision is a holistic decision support system, empowering healthcare providers with trusted insights, precise predictions, and seamless workflows—all within a HIPAA-compliant framework.",
+      title: "Robust Technical Architecture",
+      description: "Our system employs a three-tiered architecture integrating seamlessly with existing healthcare infrastructure to deliver reliable sepsis predictions. From the component-level backend APIs to the secure integration with Epic EHR systems, we've designed a scalable solution that allows healthcare providers to access patient data and receive timely sepsis risk assessments without disrupting established clinical workflows.",
       // Using array of images for slideshow functionality
       images: [
         "./assets/software_layer.png",
@@ -354,51 +372,51 @@ const ProjectSection = () => {
 
   // Download resources section - simplified to just two items
   const resources = [
-    { name: "Project Poster", link: "#", icon:  <Presentation className="w-10 h-10" />},
+    { name: "Project Poster", link: "#", icon: <Presentation className="w-10 h-10" /> },
     { name: "Previous Work", link: "https://github.com/kshannon-ucsd/24fa-dsc180a-team1/tree/main", icon: <Github className="w-10 h-10" /> }
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-purple-50">
+    <div className={`min-h-screen pt-20 ${darkMode ? 'bg-gradient-to-b from-gray-900 to-purple-900' : 'bg-gradient-to-b from-blue-50 to-purple-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero section with logo and tagline */}
         <div className="text-center py-12 mb-8">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 animated-gradient-text">
             Early Sepsis Detection System
           </h1>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            A radiographic-enhanced clinical decision support system combining AI-powered image analysis 
+          <p className={`text-xl max-w-3xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            A radiographic-enhanced clinical decision support system combining AI-powered image analysis
             with patient data to detect sepsis earlier than traditional methods.
           </p>
         </div>
 
         {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} index={index} />
+          <ProjectCard key={index} project={project} index={index} darkMode={darkMode} />
         ))}
-        
+
         {/* Publications and Resources Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8 my-12">
-          <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-8 my-12 transition-colors duration-300`}>
+          <h2 className="text-3xl font-bold mb-6 text-center animated-gradient-text">
             Research Materials
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {resources.map((resource, index) => (
-              <a 
+              <a
                 key={index}
                 href={resource.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center p-6 bg-blue-50 rounded-lg transition-all hover:bg-blue-100 hover:shadow-md"
+                className={`flex flex-col items-center p-6 ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-blue-50 text-gray-800 hover:bg-blue-100'} rounded-lg transition-all hover:shadow-md`}
               >
-                <span className="text-4xl mb-3">{resource.icon}</span>
-                <h3 className="text-xl font-semibold text-gray-800">{resource.name}</h3>
+                <span className={`text-4xl mb-3 ${darkMode ? 'text-blue-400' : ''}`}>{resource.icon}</span>
+                <h3 className="text-xl font-semibold">{resource.name}</h3>
               </a>
             ))}
           </div>
         </div>
       </div>
-      <footer className="bg-pink-20 py-4 mt-8">
-        <div className="container mx-auto text-center text-gray-600">
+      <footer className={`py-4 mt-8 ${darkMode ? 'bg-gray-800 text-gray-400' : 'bg-pink-20 text-gray-600'} transition-colors duration-300`}>
+        <div className="container mx-auto text-center">
           &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
         </div>
       </footer>
@@ -406,45 +424,45 @@ const ProjectSection = () => {
   );
 };
 
-const TeamMember = ({ name, role, email, image, contributions, isLead, socials }) => (
-  <div className={`${isLead ? 'col-span-full md:max-w-2xl mx-auto' : ''} bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105`}>
+const TeamMember = ({ name, role, email, image, contributions, isLead, socials, darkMode }) => (
+  <div className={`${isLead ? 'col-span-full md:max-w-2xl mx-auto' : ''} ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105`}>
     <div className="flex flex-col items-center">
       <img
         src={image}
         alt={name}
         className={`${isLead ? 'w-40 h-40' : 'w-32 h-32'} rounded-full mb-4 border-4 ${isLead ? 'border-purple-500' : 'border-blue-500'}`}
       />
-      <h3 className={`${isLead ? 'text-2xl' : 'text-xl'} font-semibold text-gray-800`}>{name}</h3>
+      <h3 className={`${isLead ? 'text-2xl' : 'text-xl'} font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>{name}</h3>
       <p className={`${isLead ? 'text-purple-600' : 'text-blue-600'} mb-2`}>{role}</p>
 
       {/* Social Links */}
       <div className="flex space-x-4 mb-4">
         {socials.website && (
           <a href={socials.website} target="_blank" rel="noopener noreferrer"
-            className="text-gray-600 hover:text-blue-500 transition-colors">
+            className={`${darkMode ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-blue-500'} transition-colors`}>
             <ExternalLink className="w-5 h-5" />
           </a>
         )}
-        <a href={`mailto:${email}`} className="text-gray-600 hover:text-blue-500 transition-colors">
+        <a href={`mailto:${email}`} className={`${darkMode ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-blue-500'} transition-colors`}>
           <Mail className="w-5 h-5" />
         </a>
         {socials.github && (
           <a href={socials.github} target="_blank" rel="noopener noreferrer"
-            className="text-gray-600 hover:text-blue-500 transition-colors">
+            className={`${darkMode ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-blue-500'} transition-colors`}>
             <Github className="w-5 h-5" />
           </a>
         )}
         {socials.linkedin && (
           <a href={socials.linkedin} target="_blank" rel="noopener noreferrer"
-            className="text-gray-600 hover:text-blue-500 transition-colors">
+            className={`${darkMode ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-blue-500'} transition-colors`}>
             <Linkedin className="w-5 h-5" />
           </a>
         )}
       </div>
 
-      <div className="mt-4 space-y-2 text-sm text-gray-600">
+      <div className="mt-4 space-y-2 text-sm">
         {contributions.map((contribution, index) => (
-          <li key={index} className="list-none">
+          <li key={index} className={`list-none ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             • {contribution}
           </li>
         ))}
@@ -453,7 +471,7 @@ const TeamMember = ({ name, role, email, image, contributions, isLead, socials }
   </div>
 );
 
-const AboutUs = () => {
+const AboutUs = ({ darkMode }) => {
   const projectDescription = `Our multidisciplinary team has developed a clinical decision support system that combines 
   chest X-ray analysis with patient vitals to detect sepsis earlier, when treatment is most effective. 
   Our two-stage AI approach achieved 90% accuracy for pneumonia detection and strong performance (AUC 0.86) 
@@ -580,13 +598,13 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-gradient-to-b from-blue-50 to-purple-50">
+    <div className={`min-h-screen pt-16 ${darkMode ? 'bg-gradient-to-b from-gray-900 to-purple-900' : 'bg-gradient-to-b from-blue-50 to-purple-50'} transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" style={{ marginTop: '60px' }}>
-          <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-6 animated-gradient-text">
             Meet Our Team
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className={`text-lg max-w-3xl mx-auto mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             {projectDescription}
           </p>
           <div className="flex justify-center gap-4">
@@ -594,7 +612,7 @@ const AboutUs = () => {
               href="https://github.com/kshannon-ucsd/24wi-dsc180-project"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              className={`inline-flex items-center px-6 py-3 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-800 hover:bg-gray-700'} text-white rounded-lg transition-colors`}
             >
               <Code2 className="w-5 h-5 mr-2" />
               Project Repository
@@ -615,18 +633,18 @@ const AboutUs = () => {
           {teamMembers
             .filter(member => member.isLead)
             .map(member => (
-              <TeamMember key={member.email} {...member} />
+              <TeamMember key={member.email} {...member} darkMode={darkMode} />
             ))}
 
           {teamMembers
             .filter(member => !member.isLead)
             .map(member => (
-              <TeamMember key={member.email} {...member} />
+              <TeamMember key={member.email} {...member} darkMode={darkMode} />
             ))}
         </div>
       </div>
-      <footer className="bg-pink-20 py-4 mt-8">
-        <div className="container mx-auto text-center text-gray-600">
+      <footer className={`py-4 mt-8 ${darkMode ? 'bg-gray-800 text-gray-400' : 'bg-pink-20 text-gray-600'} transition-colors duration-300`}>
+        <div className="container mx-auto text-center">
           &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
         </div>
       </footer>
@@ -634,7 +652,7 @@ const AboutUs = () => {
   );
 };
 
-const ContactUs = () => {
+const ContactUs = ({ darkMode }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -650,45 +668,45 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-b from-blue-50 to-purple-50">
+    <div className={`min-h-screen pt-20 ${darkMode ? 'bg-gradient-to-b from-gray-900 to-purple-900' : 'bg-gradient-to-b from-blue-50 to-purple-50'} transition-colors duration-300`}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-xl shadow-lg p-8" style={{ marginTop: '60px' }}>
-          <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-8 transition-colors duration-300`} style={{ marginTop: '60px' }}>
+          <h2 className="text-3xl font-bold text-center mb-8 animated-gradient-text">
             Contact Us
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                 Name
               </label>
               <input
                 type="text"
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`w-full px-4 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600 focus:ring-blue-400' : 'border-gray-300 focus:ring-blue-500'} focus:border-transparent`}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                 Email
               </label>
               <input
                 type="email"
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`w-full px-4 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600 focus:ring-blue-400' : 'border-gray-300 focus:ring-blue-500'} focus:border-transparent`}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                 Message
               </label>
               <textarea
                 required
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className={`w-full px-4 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600 focus:ring-blue-400' : 'border-gray-300 focus:ring-blue-500'} focus:border-transparent`}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               />
@@ -702,8 +720,8 @@ const ContactUs = () => {
           </form>
         </div>
       </div>
-      <footer className="bg-pink-20 py-4 mt-8">
-        <div className="container mx-auto text-center text-gray-600">
+      <footer className={`py-4 mt-8 ${darkMode ? 'bg-gray-800 text-gray-400' : 'bg-pink-20 text-gray-600'} transition-colors duration-300`}>
+        <div className="container mx-auto text-center">
           &copy; {new Date().getFullYear()} Sepsis Risk Assessment | UC San Diego
         </div>
       </footer>
@@ -711,13 +729,13 @@ const ContactUs = () => {
   );
 };
 
-const AnimatedBackground = () => (
+const AnimatedBackground = ({ darkMode }) => (
   <div className="fixed inset-0 -z-10">
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className={`absolute inset-0 ${darkMode ? 'bg-gradient-to-br from-gray-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 to-purple-50'} transition-colors duration-300`}>
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute w-96 h-96 bg-blue-400 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute w-96 h-96 bg-purple-400 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute w-96 h-96 bg-pink-400 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        <div className={`absolute w-96 h-96 ${darkMode ? 'bg-blue-600' : 'bg-blue-400'} rounded-full blur-3xl animate-blob transition-colors duration-300`}></div>
+        <div className={`absolute w-96 h-96 ${darkMode ? 'bg-purple-600' : 'bg-purple-400'} rounded-full blur-3xl animate-blob animation-delay-2000 transition-colors duration-300`}></div>
+        <div className={`absolute w-96 h-96 ${darkMode ? 'bg-pink-600' : 'bg-pink-400'} rounded-full blur-3xl animate-blob animation-delay-4000 transition-colors duration-300`}></div>
       </div>
     </div>
   </div>
@@ -726,17 +744,18 @@ const AnimatedBackground = () => (
 const App = () => {
   const [activeTab, setActiveTab] = useState('The Project');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  
+  const [darkMode, setDarkMode] = useState(true);
+
   // Handle smooth tab transitions
   const handleTabChange = (newTab) => {
     if (newTab === activeTab) return;
-    
+
     setIsTransitioning(true);
-    
+
     // After a short delay, change the active tab
     setTimeout(() => {
       setActiveTab(newTab);
-      
+
       // After tab has changed, reset transition state
       setTimeout(() => {
         setIsTransitioning(false);
@@ -744,51 +763,82 @@ const App = () => {
     }, 300);
   };
 
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // You could also save this preference to localStorage if you want it to persist
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
-      <AnimatedBackground />
-      <Navigation 
-        activeTab={activeTab} 
-        setActiveTab={handleTabChange} 
+    <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-b from-gray-900 to-purple-900 text-white' : 'bg-gradient-to-b from-blue-50 to-purple-50 text-gray-900'} transition-colors duration-300`}>
+      <AnimatedBackground darkMode={darkMode} />
+      <Navigation
+        activeTab={activeTab}
+        setActiveTab={handleTabChange}
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
       />
 
       <div className={`transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        {activeTab === 'The Project' && <ProjectSection />}
-        {activeTab === 'About Us' && <AboutUs />}
-        {activeTab === 'Contact Us' && <ContactUs />}
+        {activeTab === 'The Project' && <ProjectSection darkMode={darkMode} />}
+        {activeTab === 'About Us' && <AboutUs darkMode={darkMode} />}
+        {activeTab === 'Contact Us' && <ContactUs darkMode={darkMode} />}
       </div>
 
       <style jsx global>{`
-        @keyframes fadeOut {
-          from { opacity: 1; }
-          to { opacity: 0; }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-fade-out {
-          animation: fadeOut 0.3s ease-out forwards;
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.3s ease-in forwards;
-        }
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  
+  /* Add this new animation for the title colors */
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .animated-gradient-text {
+    background: linear-gradient(
+      -45deg, 
+      #3b82f6, 
+      #8b5cf6, 
+      #d946ef, 
+      #ec4899, 
+      #3b82f6
+    );
+    background-size: 300% 300%;
+    animation: gradientFlow 6s ease infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+`}</style>
     </div>
   );
 };
