@@ -400,7 +400,7 @@ const ProjectSection = ({ darkMode }) => {
           <h2 className="text-3xl font-bold mb-6 text-center animated-gradient-text">
             Research Materials
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 max-w-5xl mx-auto">
             {resources.map((resource, index) => (
               <a
                 key={index}
