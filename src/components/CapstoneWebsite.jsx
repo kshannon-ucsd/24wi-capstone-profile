@@ -123,7 +123,7 @@ const ProjectCard = ({ project, index, darkMode }) => {
   const [modalImage, setModalImage] = useState('');
 
   // Smart Clinical Integration special case
-  const isModelImage = project.title === "Smart Clinical Integration";
+  const isModelImage = project.title === "Interactive Decision Support Tool";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -372,7 +372,7 @@ const ProjectSection = ({ darkMode }) => {
 
   // Download resources section - simplified to just two items
   const resources = [
-    { name: "Project Poster", link: "#", icon: <Presentation className="w-10 h-10" /> },
+    { name: "Project Poster", link: "https://drive.google.com/file/d/13qU6JVTCLozurA9dBQCH8k2g5JYTtNRt/view?usp=sharing", icon: <Presentation className="w-10 h-10" /> },
     { name: "Previous Work", link: "https://github.com/kshannon-ucsd/24fa-dsc180a-team1/tree/main", icon: <Github className="w-10 h-10" /> }
   ];
 
