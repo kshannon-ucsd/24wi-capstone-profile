@@ -372,6 +372,7 @@ const ProjectSection = ({ darkMode }) => {
 
   // Download resources section - simplified to just two items
   const resources = [
+    { name: "Project Repository", link: "https://github.com/kshannon-ucsd/24wi-dsc180-project", icon: <Github className="w-10 h-10" /> }
     { name: "Project Poster", link: "https://drive.google.com/file/d/13qU6JVTCLozurA9dBQCH8k2g5JYTtNRt/view?usp=sharing", icon: <Presentation className="w-10 h-10" /> },
     { name: "Previous Work", link: "https://github.com/kshannon-ucsd/24fa-dsc180a-team1/tree/main", icon: <Github className="w-10 h-10" /> }
   ];
