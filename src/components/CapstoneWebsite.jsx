@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mail, Presentation, FileText, Linkedin, Github, ExternalLink, Menu, X, Code2, Moon, Sun } from 'lucide-react';
+import { Mail, Presentation, FileText, Linkedin, Play, Github, ExternalLink, Menu, X, Code2, Moon, Sun } from 'lucide-react';
 
 const Navigation = ({ activeTab, setActiveTab, darkMode, toggleDarkMode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -210,7 +210,7 @@ const ProjectCard = ({ project, index, darkMode }) => {
                 className="max-h-full max-w-full object-contain rounded-lg"
               />
             </div>
-            <p className={`text-xs mt-1 ${darkMode ? 'bg-gray-800/70 text-gray-300' : 'bg-white/70 text-gray-600'} rounded py-1 text-center absolute bottom-0 left-0 right-0`}>
+            <p className={`text-sm mt-1 ${darkMode ? 'bg-gray-800/70 text-gray-300' : 'bg-white/70 text-gray-600'} rounded py-1 text-center absolute bottom-0 left-0 right-0`}>
               Click to navigate to demo
             </p>
           </a>
@@ -372,6 +372,7 @@ const ProjectSection = ({ darkMode }) => {
 
   // Download resources section - simplified to just two items
   const resources = [
+    { name: "Demo", link: "https://kshannon-ucsd.github.io/24wi-dsc180-profile/", icon: <Play className="w-10 h-10" /> },
     { name: "Project Repository", link: "https://github.com/kshannon-ucsd/24wi-dsc180-project", icon: <Github className="w-10 h-10" /> },
     { name: "Project Poster", link: "https://drive.google.com/file/d/13qU6JVTCLozurA9dBQCH8k2g5JYTtNRt/view?usp=sharing", icon: <Presentation className="w-10 h-10" /> },
     { name: "Previous Work", link: "https://github.com/kshannon-ucsd/24fa-dsc180a-team1/tree/main", icon: <Github className="w-10 h-10" /> }
@@ -400,7 +401,7 @@ const ProjectSection = ({ darkMode }) => {
           <h2 className="text-3xl font-bold mb-6 text-center animated-gradient-text">
             Research Materials
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2 max-w-5xl mx-auto">
             {resources.map((resource, index) => (
               <a
                 key={index}
